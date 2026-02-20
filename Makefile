@@ -5,4 +5,4 @@ run:
 	python run.py
 
 test:
-	echo "No tests yet"
+	pytest tests/ -v
