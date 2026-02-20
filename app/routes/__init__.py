@@ -38,7 +38,7 @@ def get_students():
 @api.route('/students/<int:id>', methods=['GET'])
 def get_student(id):
     current_app.logger.info("Fetching student with id: %s", id)
-    student = Student.query.get(id)
+    student = db.session.get(Student, id)
     if not student:
         current_app.logger.warning("Student not found with id: %s", id)
         return jsonify({"error": "Student not found"}), 404
@@ -46,8 +46,8 @@ def get_student(id):
 
 @api.route('/students/<int:id>', methods=['PUT'])                                                        
 def update_student(id):
-    current_app.logger.info("Updating student with id: %s")
-    student = Student.query.get(id)                                                                      
+    current_app.logger.info("Updating student with id: %s", id)
+    student = db.session.get(Student, id)                                                                      
     if not student:
         current_app.logger.warning("Student not found with id: %s", id)                                                                                      
         return jsonify({"error": "Student not found"}), 404
@@ -68,9 +68,9 @@ def update_student(id):
 @api.route('/students/<int:id>', methods=['DELETE'])                                                     
 def delete_student(id):
     current_app.logger.info("Deleting student with id: %s", id)
-    student = Student.query.get(id)                                                                      
+    student = db.session.get(Student, id)                                                                      
     if not student:       
-        current_app.logger.warning("Student deleted with id: %s", id)                                                                               
+        current_app.logger.warning("Student not found with id: %s", id)                                                                               
         return jsonify({"error": "Student not found"}), 404
 
     db.session.delete(student)
