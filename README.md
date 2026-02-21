@@ -24,6 +24,8 @@ A Student CRUD REST API built with Python and Flask.
 - Python 3.x
 - PostgreSQL
 - Docker
+- Docker Compose
+- Make
 
 ## Local Setup
 
@@ -87,22 +89,50 @@ A Student CRUD REST API built with Python and Flask.
 make docker-build
 ```
 
-### Run the container
+### Run the container (standalone)
 ```
 make docker-run
 ```
 
 Environment variables are injected at runtime via the `.env` file. Make sure your `.env` file exists before running the container. Never commit `.env` to the repository.
 
+## One-Click Local Development Setup
+
+The easiest way to run the full stack locally is with a single command:
+
+```
+make start-api
+```
+
+This will automatically:
+1. Build the Docker image
+2. Start the PostgreSQL database container
+3. Run database migrations
+4. Start the API container
+
+### Running targets individually (in order)
+
+If you prefer to run each step manually:
+
+```
+make start-db       # 1. Start the database container
+make migrate        # 2. Run database migrations
+make docker-build   # 3. Build the API Docker image
+make start-api      # 4. Start the API container
+```
+
 ## Makefile Commands
 
-| Command             | Description                  |
-|---------------------|------------------------------|
-| `make install`      | Install dependencies         |
-| `make run`          | Start the server             |
-| `make test`         | Run unit tests               |
-| `make docker-build` | Build the Docker image       |
-| `make docker-run`   | Run the Docker container     |
+| Command             | Description                            |
+|---------------------|----------------------------------------|
+| `make install`      | Install dependencies                   |
+| `make run`          | Start the server locally               |
+| `make test`         | Run unit tests                         |
+| `make docker-build` | Build the Docker image                 |
+| `make docker-run`   | Run the API container (standalone)     |
+| `make start-db`     | Start the PostgreSQL container         |
+| `make migrate`      | Run database migrations                |
+| `make start-api`    | Start the full stack (DB + API)        |
 
 ## Running Tests
 
