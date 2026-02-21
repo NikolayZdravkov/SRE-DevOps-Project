@@ -23,6 +23,7 @@ A Student CRUD REST API built with Python and Flask.
 
 - Python 3.x
 - PostgreSQL
+- Docker
 
 ## Local Setup
 
@@ -79,13 +80,29 @@ A Student CRUD REST API built with Python and Flask.
 | PUT    | /api/v1/students/\<id\>   | Update a student   |
 | DELETE | /api/v1/students/\<id\>   | Delete a student   |
 
+## Docker
+
+### Build the image
+```
+make docker-build
+```
+
+### Run the container
+```
+make docker-run
+```
+
+Environment variables are injected at runtime via the `.env` file. Make sure your `.env` file exists before running the container. Never commit `.env` to the repository.
+
 ## Makefile Commands
 
-| Command        | Description              |
-|----------------|--------------------------|
-| `make install` | Install dependencies     |
-| `make run`     | Start the server         |
-| `make test`    | Run unit tests           |
+| Command             | Description                  |
+|---------------------|------------------------------|
+| `make install`      | Install dependencies         |
+| `make run`          | Start the server             |
+| `make test`         | Run unit tests               |
+| `make docker-build` | Build the Docker image       |
+| `make docker-run`   | Run the Docker container     |
 
 ## Running Tests
 
