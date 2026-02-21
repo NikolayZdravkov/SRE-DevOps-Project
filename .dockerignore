@@ -1,0 +1,11 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.git/
+.gitignore
+migrations/
+*.postman_collection.json
+tests/
+.pytest_cache/
