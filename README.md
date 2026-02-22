@@ -140,6 +140,26 @@ make start-api      # 4. Start the API container
 make test
 ```
 
+## CI Pipeline
+
+The project uses GitHub Actions for CI, running on a self-hosted runner.
+
+### Pipeline stages
+1. Install dependencies
+2. Run tests
+3. Lint
+4. Docker login to GHCR
+5. Docker build and push
+
+### Triggers
+- Automatically on push to `app/`, `tests/`, `requirements.txt`, `Dockerfile`, or `Makefile`
+- Manually from the GitHub Actions tab using **Run workflow**
+
+### Self-hosted runner setup
+1. Go to your GitHub repository → **Settings** → **Actions** → **Runners**
+2. Click **New self-hosted runner** and follow the instructions
+3. Start the runner with `./run.sh` from the runner directory
+
 ## Postman Collection
 
 A Postman collection is included in the repository (`student-api.postman_collection.json`). Import it into Postman to test all API endpoints.
