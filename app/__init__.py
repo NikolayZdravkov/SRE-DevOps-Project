@@ -1,12 +1,14 @@
 import logging
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+
 from app.config import Config
-import logging
 
 db = SQLAlchemy()
 migrate = Migrate()
+
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -23,7 +25,7 @@ def create_app(test_config=None):
     db.init_app(app)
     migrate.init_app(app, db)
 
-    from app.models import Student
+    from app.models import Student  # noqa: F401
 
     from app.routes import api
     app.register_blueprint(api)

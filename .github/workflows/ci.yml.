@@ -1,0 +1,46 @@
+name: CI Pipeline 
+
+on:
+   push:
+     paths:
+        - 'app/**'
+        - 'tests/**'
+        - 'requirements.txt'
+        - 'Dockerfile'
+        - 'Makefile'
+    workflow_dispatch:
+
+jobs:
+    ci:
+      runs-on: self-hosted
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up Python
+          uses: actions/setup-python@v5
+          with:
+            python-version: '3.13'
+
+        - name: Install dependencies
+          run: make install
+
+        - name: Run tests
+          run: make test
+
+        - name: Lint
+          run: make lint
+
+        - name: Docker login to GHCR
+          uses: docker/login-action@v3
+          with:
+            registry: ghcr.io
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Docker build and push
+          run: | 
+            docker build -t ghcr.io/nikolayzdravkov/student-api:1.0.0 .
+            docker push ghcr.io/nikolayzdravkov/student-api:1.0.0
+    

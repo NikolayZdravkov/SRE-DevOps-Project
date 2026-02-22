@@ -21,3 +21,6 @@ migrate: start-db
 
 start-api: docker-build migrate
 	docker-compose up api
+
+lint:
+	flake8 app/ --max-line-length=120

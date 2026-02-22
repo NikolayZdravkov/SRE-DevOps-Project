@@ -1,5 +1,6 @@
 from app import db
 
+
 class Student(db.Model):
     __tablename__ = 'students'
 
@@ -7,10 +8,10 @@ class Student(db.Model):
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    age = db.Column(db.Integer, nullable=True) 
+    age = db.Column(db.Integer, nullable=True)
 
     def to_dict(self):
-        return{
+        return {
             "id": self.id,
             "first_name": self.first_name,
             "last_name": self.last_name,
