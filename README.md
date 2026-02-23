@@ -26,6 +26,8 @@ A Student CRUD REST API built with Python and Flask.
 - Docker
 - Docker Compose
 - Make
+- Vagrant
+- VirtualBox
 
 ## Local Setup
 
@@ -121,6 +123,54 @@ make docker-build   # 3. Build the API Docker image
 make start-api      # 4. Start the API container
 ```
 
+## Production Deployment (Vagrant)
+
+The production setup runs 2 API containers, 1 DB container, and 1 Nginx container for load balancing.
+
+### Architecture
+```
+Internet
+    ↓
+Nginx (port 8080)
+    ↓ load balances
+┌──────┬──────┐
+API 1  API 2
+    ↓
+   DB (PostgreSQL)
+```
+
+### Setup
+
+1. Install Vagrant and VirtualBox
+2. Spin up the VM:
+   ```
+   vagrant up
+   ```
+3. SSH into the VM:
+   ```
+   vagrant ssh
+   ```
+4. Navigate to the project and deploy:
+   ```
+   cd /vagrant
+   make deploy
+   ```
+5. Run database migrations:
+   ```
+   docker exec -e FLASK_APP=run.py api1 flask db upgrade
+   ```
+6. The API is now accessible at `http://localhost:8080/api/v1/`
+
+### Stopping the VM
+```
+vagrant halt
+```
+
+### Destroying the VM
+```
+vagrant destroy
+```
+
 ## Makefile Commands
 
 | Command             | Description                            |
@@ -128,11 +178,13 @@ make start-api      # 4. Start the API container
 | `make install`      | Install dependencies                   |
 | `make run`          | Start the server locally               |
 | `make test`         | Run unit tests                         |
+| `make lint`         | Run code linting                       |
 | `make docker-build` | Build the Docker image                 |
 | `make docker-run`   | Run the API container (standalone)     |
 | `make start-db`     | Start the PostgreSQL container         |
 | `make migrate`      | Run database migrations                |
 | `make start-api`    | Start the full stack (DB + API)        |
+| `make deploy`       | Build image and deploy full stack      |
 
 ## Running Tests
 

@@ -18,6 +18,7 @@ ENV PYTHONUNBUFFERED=1
 COPY --from=builder /install /usr/local
 
 COPY app/ app/
+COPY migrations/ migrations/
 COPY run.py .
 
 EXPOSE 5000
