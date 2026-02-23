@@ -20,7 +20,10 @@ migrate: start-db
 	flask db upgrade
 
 start-api: docker-build migrate
-	docker-compose up api
+	docker compose up api1 api2
+
+deploy: docker-build
+	docker compose up -d
 
 lint:
 	flake8 app/ --max-line-length=120
