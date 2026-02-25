@@ -127,17 +127,6 @@ make start-api      # 4. Start the API container
 
 The production setup runs 2 API containers, 1 DB container, and 1 Nginx container for load balancing.
 
-### Architecture
-```
-Internet
-    ↓
-Nginx (port 8080)
-    ↓ load balances
-┌──────┬──────┐
-API 1  API 2
-    ↓
-   DB (PostgreSQL)
-```
 
 ### Setup
 
