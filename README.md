@@ -127,6 +127,17 @@ make start-api      # 4. Start the API container
 
 The production setup runs 2 API containers, 1 DB container, and 1 Nginx container for load balancing.
 
+```mermaid
+flowchart TD
+    Client([Client]) --> Nginx
+
+    subgraph Vagrant VM
+        Nginx[Nginx :8080] --> API1[API Container 1 :5000]
+        Nginx --> API2[API Container 2 :5000]
+        API1 --> DB[(PostgreSQL :5432)]
+        API2 --> DB
+    end
+```
 
 ### Setup
 
