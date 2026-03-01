@@ -1,0 +1,96 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: api-secret
+  namespace: student-api
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: vault-backend
+    kind: SecretStore
+  target:
+    name: api-secret
+  data:
+    - secretKey: POSTGRES_USER
+      remoteRef:
+        key: student-api/database
+        property: username
+    - secretKey: POSTGRES_PASSWORD
+      remoteRef:
+        key: student-api/database
+        property: password
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: api-config
+  namespace: student-api
+data:
+  FLASK_APP: run.py
+  DEBUG: "false"
+  POSTGRES_DB: student_db
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: "5432"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-api
+  namespace: student-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: student-api
+  template:
+    metadata:
+      labels:
+        app: student-api
+    spec:
+      serviceAccountName: student-api-sa
+      nodeSelector:
+        type: application
+      initContainers:
+        - name: db-migrate
+          image: student-api:1.0.1
+          imagePullPolicy: Never
+          command: ["flask", "db", "upgrade"]
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)"
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secret
+      containers:
+        - name: student-api
+          image: student-api:1.0.1
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000
+          env:
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@postgres:5432/$(POSTGRES_DB)"
+          envFrom:
+            - configMapRef:
+                name: api-config
+            - secretRef:
+                name: api-secret
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: student-api
+  namespace: student-api
+spec:
+  selector:
+    app: student-api
+  ports:
+    - port: 5000
+      targetPort: 5000
+      nodePort: 30000
+  type: NodePort
