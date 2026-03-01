@@ -28,6 +28,8 @@ A Student CRUD REST API built with Python and Flask.
 - Make
 - Vagrant
 - VirtualBox
+- Minikube
+- kubectl
 
 ## Local Setup
 
@@ -211,6 +213,44 @@ The project uses GitHub Actions for CI, running on a self-hosted runner.
 1. Go to your GitHub repository → **Settings** → **Actions** → **Runners**
 2. Click **New self-hosted runner** and follow the instructions
 3. Start the runner with `./run.sh` from the runner directory
+
+## Kubernetes Cluster Setup
+
+A 3-node Minikube cluster is used as the production Kubernetes environment.
+
+### Node roles
+
+| Node          | Label                      | Purpose               |
+|---------------|----------------------------|-----------------------|
+| minikube      | type=application           | Runs the API          |
+| minikube-m02  | type=database              | Runs the database     |
+| minikube-m03  | type=dependent_services    | Runs observability stack and other services |
+
+### Start the cluster
+
+```
+minikube start --nodes=3 --driver=docker
+```
+
+### Apply node labels
+
+```
+kubectl label node minikube type=application
+kubectl label node minikube-m02 type=database
+kubectl label node minikube-m03 type=dependent_services
+```
+
+### Verify nodes and labels
+
+```
+kubectl get nodes --show-labels
+```
+
+### Stop the cluster
+
+```
+minikube stop
+```
 
 ## Postman Collection
 
