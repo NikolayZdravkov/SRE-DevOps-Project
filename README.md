@@ -340,6 +340,65 @@ kubectl port-forward svc/student-api 5000:5000 -n student-api
 
 Then access the API at `http://localhost:5000/api/v1/`
 
+## Helm Deployment
+
+Helm charts are located in the `helm/` directory:
+
+```
+helm/
+├── database/        # PostgreSQL chart
+└── student-api/     # REST API chart
+```
+
+### Prerequisites
+
+- Minikube cluster running with correct node labels
+- External Secrets Operator installed
+- Hashicorp Vault installed and configured (see Kubernetes Deployment section)
+- Docker image loaded into Minikube:
+  ```
+  docker build -t student-api:1.0.1 .
+  minikube image load student-api:1.0.1
+  ```
+
+### Install
+
+Install the database chart first, then the API chart:
+
+```
+helm install database ./helm/database
+helm install student-api ./helm/student-api
+```
+
+### Verify
+
+```
+kubectl get pods -n student-api
+kubectl get externalsecret -n student-api
+```
+
+### Access the API
+
+```
+kubectl port-forward svc/student-api 5000:5000 -n student-api
+```
+
+Then access the API at `http://localhost:5000/api/v1/`
+
+### Upgrade a chart
+
+```
+helm upgrade database ./helm/database
+helm upgrade student-api ./helm/student-api
+```
+
+### Uninstall
+
+```
+helm uninstall student-api
+helm uninstall database
+```
+
 ## Postman Collection
 
 A Postman collection is included in the repository (`student-api.postman_collection.json`). Import it into Postman to test all API endpoints.
